@@ -1,4 +1,4 @@
-# EASYapu
+# EASYapi
 
 Smart API Discovery (EASYapi) is a browser-console tool for discovering APIs used by a web application.
 
