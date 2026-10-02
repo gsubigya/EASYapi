@@ -1,110 +1,76 @@
 # EASYapi
 
-Smart API Discovery (EASYapi) is a browser-console tool for discovering APIs used by a web application.
+EASYapi is a browser console script that shows you which APIs a web application is using. You paste it into DevTools, browse the site normally, and it logs every API request the app makes.
 
-It passively watches the browser and identifies API requests made by the application. It shows useful information such as the HTTP method, URL, request body, response status, and content type.
+It is built for authorized web security testing and reconnaissance. It also works for developers who want to see exactly what their own frontend exposes.
 
-The main goal is to make API discovery easier during authorized web security testing and reconnaissance.
+## How it works
 
-## What It Detects
+EASYapi is passive. It watches the traffic your browser already generates and the references already present in the loaded page. It does not send its own requests, brute-force paths, or fuzz anything.
 
-The tool can monitor:
-
-- `GET`
-- `POST`
-- `PUT`
-- `PATCH`
-- `DELETE`
-- Other HTTP methods
-- GraphQL requests
-- WebSockets
-- `fetch()`
-- `XMLHttpRequest`
-- `sendBeacon()`
-- API URLs referenced inside JavaScript
-- API-related browser resources
-
-For detected requests, it can show:
+For each API request it detects, it shows:
 
 - HTTP method
-- Full URL
-- Path and query string
-- Request headers
-- Request body
+- Full URL, path, and query string
+- Request headers and body
 - Request content type
-- Response status
-- Response content type
-- Response body preview
-- GraphQL operation
-- Why the endpoint was identified as an API
+- Response status and content type
+- A preview of the response body
+- The GraphQL operation, if there is one
+- The reason the request was flagged as an API
 
-Sensitive values such as passwords, tokens, API keys, and authorization values are automatically redacted.
+Passwords, tokens, API keys, and authorization values are redacted automatically.
 
-## How to Use
+## What it detects
 
-### 1. Open the target website
+- All HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, and others)
+- `fetch()` and `XMLHttpRequest` calls
+- `sendBeacon()` calls
+- GraphQL requests
+- WebSocket connections
+- API URLs referenced inside JavaScript files
+- Other API-related browser resources
 
-Use a website or application that you are authorized to test.
+## Usage
 
-### 2. Open Developer Tools
+1. Open a website you are authorized to test.
+2. Press `F12` and go to the **Console** tab.
+3. Copy the contents of `console.js` from this repo, paste it into the console, and press Enter.
+4. Wait for this message:
 
-Press `F12` and open the **Console** tab.
+```
+[SmartAPI] ● LIVE
+Waiting for API activity...
+```
 
-### 3. Paste the script
+5. Use the site like a normal user. Log in, search, open profiles, change settings, submit forms, upload files. Every API request shows up in the console as it happens.
 
-Copy the Smart API Discovery JavaScript into the console and press Enter.
+Some browsers block pasting into the console by default. If yours does, follow the prompt it gives you (Firefox, for example, asks you to type `allow pasting` first). Only paste code you have read and understand.
 
-You should see:
+## Example output
 
-    [SmartAPI] ● LIVE
-    Waiting for API activity...
+```
+[HIGH] POST  https://example.com/api/v1/login
+         → BODY: {"email":"test@example.com","password":"[REDACTED]"}
+         → 200 application/json
 
-### 4. Browse the application
-
-You do not need to enter any additional commands.
-
-Simply use the website normally:
-
-- Log in
-- Search
-- Open profiles
-- View products
-- Submit forms
-- Change settings
-- Upload files
-- Navigate through different pages
-
-When the browser makes an API request, the tool will automatically display it.
-
-Example:
-
-    [HIGH] POST  https://example.com/api/v1/login
-             → BODY: {"email":"test@example.com","password":"[REDACTED]"}
-             → 200 application/json
-
-Another example:
-
-    [HIGH] GET  https://example.com/api/v1/users/123
-             → 200 application/json
-
-## Important
-
-Smart API Discovery is **passive**. It observes requests made by the browser and references found in the loaded application.
-
-It does **not** automatically brute-force or fuzz random API endpoints.
-
-It is intended for authorized security testing, learning, and reconnaissance.
+[HIGH] GET  https://example.com/api/v1/users/123
+         → 200 application/json
+```
 
 ## Limitations
 
-The tool cannot discover every API that exists on a server.
+- It only finds what the browser calls or what appears in the resources it scans. An endpoint that is never triggered and never referenced will not show up.
+- It runs inside the page, so reloading the page stops it. Paste it again after a reload.
+- It cannot see requests made before you pasted it.
+- It is a discovery tool, not a vulnerability scanner. It tells you what exists. Testing for broken authorization, IDOR, and similar issues is still up to you.
 
-If an endpoint is never called by the browser and is not exposed in the resources scanned by the tool, it may not be discovered.
+For deeper enumeration, you will need other authorized testing techniques alongside this.
 
-For deeper API enumeration, additional authorized testing techniques may be required.
+## Responsible use
+
+Only run EASYapi on applications you own or have explicit permission to test. Follow the scope and rules of any program or engagement you are part of.
 
 ## Version
 
-**EASYapi v1**
-
-A lightweight browser-console API discovery tool for web security research.
+EASYapi v1
