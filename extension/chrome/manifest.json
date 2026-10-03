@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "EASYapi",
+  "version": "2.0.0",
+  "description": "Passive API discovery for authorized security testing. See which APIs a web app uses, ranked by confidence.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "EASYapi",
+    "default_popup": "ui.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": [
+    "scripting",
+    "storage",
+    "webNavigation",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "minimum_chrome_version": "112",
+  "background": {
+    "service_worker": "background.js"
+  }
+}
